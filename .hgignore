@@ -1,0 +1,8 @@
+syntax:glob
+
+*.pyc
+*.swp
+
+.DS_Store
+
+authnado/config/custom.py

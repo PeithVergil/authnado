@@ -8,6 +8,10 @@ logger = logging.getLogger(__name__)
 
 class BaseHandler(RequestHandler):
 
+    def initialize(self, executor=None, ioloop=None):
+        self.executor = executor
+        self.ioloop = ioloop
+
     def set_default_headers(self):
         self.set_header('Content-Type', 'application/json')
 

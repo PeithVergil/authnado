@@ -19,21 +19,30 @@ class Authorize(base.BaseHandler):
 
 class Tokens(base.BaseHandler):
 
-    def post(self):
-        uri, method = self.request.uri, self.request.method,
-        body, headers = self.request.body, self.request.headers,
+    def create(self, uri, body, method, headers):
+        try:
+            body = json.loads(body)
+        except json.JSONDecodeError:
+            pass
 
-        body = json.loads(body)
-
-        # Define extra credentials here.
-        credentials = dict()
-
-        headers, body, status = auth.server.create_token_response(
+        headers, response, status = auth.server.create_token_response(
             uri, method,
             body, headers,
-            credentials
+        )
+
+        return status, headers, response
+
+    async def post(self):
+        # Run blocking call on a separate thread.
+        status, headers, response = await self.ioloop.run_in_executor(
+            self.executor,
+            self.create,
+            self.request.uri,
+            self.request.body,
+            self.request.method,
+            self.request.headers,
         )
         self.set_status(status)
         for key, val in headers.items():
             self.set_header(key, val)
-        self.write(body)
+        self.write(response)

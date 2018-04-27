@@ -9,7 +9,7 @@ logger = logging.getLogger(__name__)
 class AuthnadoValidator(oauth2.RequestValidator):
 
     ############################
-    # Pre and post authorization
+    # Authorization request
     ############################
 
     def validate_client_id(self, client_id, request, *args, **kwargs):
@@ -46,6 +46,19 @@ class AuthnadoValidator(oauth2.RequestValidator):
                         *args, **kwargs):
         # Is the client allowed to access the requested scopes?
         return set(client.default_scopes).issuperset(set(scopes))
+
+    def get_default_redirect_uri(self, client_id, request, *args, **kwargs):
+        return request.client.default_redirect_uri
+
+    def validate_response_type(self, client_id, response_type, client, request,
+                               *args, **kwargs):
+        # if response_type == "code":
+        #     return client.allows_grant_type(AbstractApplication.GRANT_AUTHORIZATION_CODE)
+        # elif response_type == "token":
+        #     return client.allows_grant_type(AbstractApplication.GRANT_IMPLICIT)
+        if response_type in ['code', 'token']:
+            return True
+        return False
 
     ############################
     # Token request

@@ -1,10 +1,11 @@
 import logging
 from concurrent import futures
-from tornado.web import Application
+# from tornado.web import Application
 from tornado.ioloop import IOLoop
 
+from .app import App
 from .config import settings
-from .handlers import http
+# from .handlers import http
 
 
 def logs():
@@ -18,14 +19,10 @@ def logs():
 def main():
     logs()
 
-    with futures.ThreadPoolExecutor(settings.get('THREAD_COUNT')) as executor:
+    with futures.ThreadPoolExecutor(settings.get('thread_size')) as executor:
         loop = IOLoop.current()
-        params = dict(
-            ioloop=loop,
-            executor=executor,
-        )
-        app = Application(http.routes(params), **settings)
-        app.listen(settings.get('PORT'))
+        app = App(executor, loop)
+        app.listen(settings.get('port'))
         loop.start()
 
 

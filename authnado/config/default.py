@@ -9,6 +9,10 @@ def root(*paths):
 
 
 settings = {
+    'cookie_secret': (
+        'e71f0bd68da05029e35ebb540dec8a77'
+        '20b8d0040cce2e9c25419e683f6270d6'
+    ),
     'template_path': root('templates'),
     'static_path': root('assets'),
     'threads': 4,

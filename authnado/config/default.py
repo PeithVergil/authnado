@@ -10,7 +10,8 @@ def root(*paths):
 
 settings = {
     'template_path': root('templates'),
-    'thread_size': 4,
+    'static_path': root('assets'),
+    'threads': 4,
     'debug': False,
     'port': 8080,
 }

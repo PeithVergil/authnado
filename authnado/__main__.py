@@ -19,7 +19,7 @@ def logs():
 def main():
     logs()
 
-    with futures.ThreadPoolExecutor(settings.get('thread_size')) as executor:
+    with futures.ThreadPoolExecutor(settings.get('threads')) as executor:
         loop = IOLoop.current()
         app = App(executor, loop)
         app.listen(settings.get('port'))

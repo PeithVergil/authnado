@@ -16,36 +16,37 @@
     <link href="{{ static_url('styles/style.css') }}" rel="stylesheet">
   </head>
 
-  <body>
+  <body class="text-center">
 
-    <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-4">
-                <form method="post">
-                    {% module xsrf_form_html() %}
+    <form class="form-signin" method="post">
+        {% module xsrf_form_html() %}
 
-                    <h1 class="h3 mb-3 font-weight-normal">Please authorize</h1>
+        <img class="mb-4" src="https://getbootstrap.com/assets/brand/bootstrap-solid.svg" alt="" width="72" height="72">
 
-                    {% for scope in scopes %}
-                        <div>
-                            <label>
-                                <input type="checkbox" name="scopes" value="{{ scope }}"> {{ scope }}
-                            </label>
-                        </div>
-                    {% end %}
-
-                    <button class="btn btn-lg btn-block btn-primary" type="submit">Authorize</button>
-
-                    <input type="hidden" name="state" value="{{ state }}">
-                    <input type="hidden" name="client_id" value="{{ client_id }}">
-                    <input type="hidden" name="redirect_uri" value="{{ redirect_uri }}">
-                    <input type="hidden" name="response_type" value="{{ response_type }}">
-
-                    <p class="mt-5 mb-3 text-muted">&copy; {{ now.year }}</p>
-                </form>
+        {% if messages %}
+            <div class="alert alert-danger" role="alert">
+                {{ messages['login'] }}
             </div>
+        {% end %}
+        
+        <label for="inputUsername" class="sr-only">Email Address</label>
+        <input type="email" id="inputUsername" name="username" value="{{ username }}" class="form-control" placeholder="Email Address" required autofocus>
+
+        <label for="inputPassword" class="sr-only">Password</label>
+        <input type="password" id="inputPassword" name="password" value="{{ password }}" class="form-control" placeholder="Password" required>
+
+        <div class="checkbox mb-3">
+            <label>
+                <input type="checkbox" name="remember" value="remember"> Remember me
+            </label>
         </div>
-    </div>
+        
+        <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
+
+        <input type="hidden" name="redirect" value="{{ redirect }}">
+
+        <p class="mt-5 mb-3 text-muted">&copy; {{ now.year }}</p>
+    </form>
 
     <!-- Bootstrap core JavaScript
     ================================================== -->

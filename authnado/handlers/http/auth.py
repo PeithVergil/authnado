@@ -1,36 +1,16 @@
 import json
 from tornado.httputil import url_concat
 from . import base
-from ... import auth
 
 
 class Authorize(base.BaseHandler):
 
-    def auth_validate(self, uri, body, method, headers):
-        try:
-            body = json.loads(body)
-        except json.JSONDecodeError:
-            pass
-
-        scopes, credentials = auth.server.validate_authorization_request(
-            uri, method,
-            body, headers,
-        )
-        return scopes, credentials
-
-    def auth_response(self, uri, scopes, credentials):
-        headers, response, status = auth.server.create_authorization_response(
-            uri=credentials["redirect_uri"],
-            scopes=scopes,
-            credentials=credentials
-        )
-        return headers, response, status
+    def initialize(self, **kwargs):
+        self.auth = kwargs.get('provider')
 
     async def get(self):
         if self.current_user:
-            # Run blocking call on a separate thread.
-            scopes, credentials = await self.application.run(
-                self.auth_validate,
+            scopes, credentials = await self.auth.validate_request(
                 self.request.uri,
                 self.request.body,
                 self.request.method,
@@ -54,9 +34,7 @@ class Authorize(base.BaseHandler):
                 redirect_uri=uri,
                 response_type=self.get_argument('response_type'),
             )
-            # Run blocking call on a separate thread.
-            headers, response, status = await self.application.run(
-                self.auth_response,
+            headers, response, status = await self.auth.create_response(
                 uri,
                 scopes,
                 credentials,
@@ -72,22 +50,11 @@ class Authorize(base.BaseHandler):
 
 class Tokens(base.BaseHandler):
 
-    def create(self, uri, body, method, headers):
-        try:
-            body = json.loads(body)
-        except json.JSONDecodeError:
-            pass
-
-        headers, response, status = auth.server.create_token_response(
-            uri, method,
-            body, headers,
-        )
-        return status, headers, response
+    def initialize(self, **kwargs):
+        self.auth = kwargs.get('provider')
 
     async def post(self):
-        # Run blocking call on a separate thread.
-        status, headers, response = await self.application.run(
-            self.create,
+        headers, response, status = await self.auth.create_token(
             self.request.uri,
             self.request.body,
             self.request.method,

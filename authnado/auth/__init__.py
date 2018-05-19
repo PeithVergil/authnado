@@ -1,6 +1,6 @@
-from .provider import server
+from .provider import AuthnadoProvider
 
 
 __all__ = [
-    'server',
+    'AuthnadoProvider',
 ]

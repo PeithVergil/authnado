@@ -1,4 +1,10 @@
-Testing the `authorize` endpoint. 
+Authnado
+========
+
+A simple implementation of an OAuth 2.0 server.
+
+
+Testing the `authorize` endpoint.
 
 Authorization Code Grant
 
@@ -19,5 +25,5 @@ http -v http://127.0.0.1:8080/v1/auth/tokens client_id=hello client_secret=world
 ```
 
 ```bash
-http -v http://127.0.0.1:8080/v1/auth/tokens "grant_type=authorization_code" "code=T5Bd8Y7acxtyFhPGJY7lSODHYNWawO"
+http -v http://127.0.0.1:8080/v1/auth/tokens "grant_type=authorization_code" "code=nR20bCRPHu9BUpJT5JSEC6O6xqV8SN"
 ```

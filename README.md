@@ -4,6 +4,29 @@ Authnado
 A simple implementation of an OAuth 2.0 server.
 
 
+Installation
+------------
+
+Create a virtual environment.
+
+```bash
+python -m venv authnado-env
+source authnado-env/bin/activate
+```
+
+Install dependencies.
+
+```bash
+pip install -r requirements.txt
+```
+
+Run the server.
+
+```bash
+python -m authnado
+```
+
+
 Testing the `authorize` endpoint.
 
 Authorization Code Grant
